@@ -31,10 +31,8 @@ router.post('/register', async (req, res) => {
         password: req.body.password
     });
     const savedUser = await user.save();
-
     res.send(savedUser);
 });
-
 module.exports = router;
 
 
