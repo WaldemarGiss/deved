@@ -8,7 +8,7 @@ const bcrypt = require('bcryptjs');
 router.post('/register', async (req, res) => {
 
     //Validate before adding user
-    const {value, error} = await registerValidation(req.body);
+    const {error} = await registerValidation(req.body);
     if (error) {
         return res.status(400).send(error.details[0].message);
     }
@@ -29,14 +29,14 @@ router.post('/register', async (req, res) => {
         password: hashedPassword
     });
 
-    const savedUser = await user.save();
+    await user.save();
     res.send({user: user._id});
 });
 
 //Login System
 
 router.post('/login', async (req, res) => {
-    const {value, error} = await loginValidation(req.body);
+    const {error} = await loginValidation(req.body);
     if (error) {
         return res.status(400).send(error.details[0].message);
     } else {
@@ -50,14 +50,12 @@ router.post('/login', async (req, res) => {
         if (!validPass) {
             return res.status(400).send('Falsches password');
         }
-    //Create and assign Webtoken
-    const token = jwt.sign({_id: user._id}, process.env.TOKEN_SECRET);
+        //Create and assign Webtoken
+        const token = jwt.sign({_id: user._id}, process.env.TOKEN_SECRET);
 
-    res.header('auth-token', token).send(token);
+        res.header('auth-token', token).send(token);
     }
 
 });
 
 module.exports = router;
-
-
